@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // spread 연산자
+        // 배열 합치기
+        const a = [1, 2, 3];
+        const b = [4,5];
+
+        // 기존 함수방식 concat
+        const concat = a.concat(b);
+        console.log('concat :', concat);
+
+        // ... 연산자
+        const spread = [...a, ...b]
+        console.log(spread);
+
+        const obj = {
+            name: '홍길동',
+            age: 19
+        };
+        console.log({...obj}); //얕은 복사(동일속성, 새로운 객체, 기존 obj에는 영향이 없음)
+        console.log(obj);
+        console.log({...obj});
+
+        // 예시
+        const newObj = obj;
+        newObj.age = 29;
+        console.log(newObj);
+        console.log(obj);
+        obj.age =31;
+        console.log('obj:',obj);
+        console.log('newObj:',newObj);
+        
+        const str = 'hello';
+        console.log([...str]);
+
+            // rest 파라미터
+
+        function get(a, b, c, ...rest) {
+            console.log(a, b, c);
+            console.log(rest);
+        }
+        const arr = [10,20,30,40,50,60];
+        get(...arr);
+
+        const word1="abc";
+        const word2="xyz";
+
+        const arr1 = [...word1, ...word2];
+        console.log(arr1);
+
+        
+
+    </script>
+</body>
+</html>

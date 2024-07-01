@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        class Shape {
+            constructor(width, height) {
+                this.width = width;
+                this.height = height;
+            }
+
+            getArea() {
+
+                return this.width * this.height;
+            }
+        }
+
+
+
+        class Ractangle extends Shape {
+            getDiagonal() {
+
+                return Math.sqrt((this.width ** 2) + (this.height ** 2));
+
+            }
+        }
+
+        class Triangle {
+            constructor(base, height) {
+                this.base = base;
+                this.height = height;
+            }
+            getArea() {
+                return this.base * this.height / 2;
+            }
+        }
+
+        class Circle {
+            constructor(radius) {
+                this.radius = radius;
+            }
+            getArea() {
+                return this.radius ** 2 * Math.PI;
+            }
+        }
+
+
+
+        let rec1 = new Shape(3, 4)
+
+        /* 
+        let rec1 = {
+            width : 3,
+            height : 4,
+            getArea: function () {
+
+                return this.width * this.height;
+            }
+        }
+*/
+
+
+
+        let rec2 = new Ractangle(3, 4)
+        
+        console.log("rectangular Area :", rec1.getArea());
+        console.log("rectangular diagonal :", rec2.getDiagonal());
+
+        let tri = new Triangle(5, 2);
+        let cir = new Circle(3);
+        console.log("triangle area : ", tri.getArea());
+        console.log("circle area : ", cir.getArea());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

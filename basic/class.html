@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // class
+        class Cat {
+            // 생성자 : constructor
+            constructor(name, age) {
+                // 속성 var, const, let를 이용 안하는게 일반적
+                this.name = name;
+                this.age = age;
+            }
+            // 메서드(function 키워드를 쓰지 않음)
+            mew() {
+                console.log(this.name,' : "야옹" ');
+            }
+            eat() {
+                console.log('먹이를 먹습니다.');
+            }
+        }
+
+        const cat1 = new Cat("나비",1);
+        cat1.mew();
+        cat1.eat();
+        const cat2 = new Cat("초코",2);
+        const cat3 = new Cat("냥이",4);
+        console.log(cat1);
+        console.log(cat2);
+        console.log(cat3);
+
+        // 상속
+        class House {
+            constructor(str, area) {
+                this.str = str; // this -> House를 지칭
+                this.area = area;
+            }
+            name() {
+                console.log(`${this.str}에 삽니다.`);
+            }
+            door() {
+                console.log(`문을 열고 닫습니다.`);
+            }
+            window() {
+                console.log(`창문을 열고 닫습니다.`);
+            }
+        }
+        const myHouse = new House('아파트')
+        myHouse.name();
+        myHouse.door();
+        myHouse.window();
+
+        class Apartment extends House {
+
+            // super(): 부모 클래스의 생성자를 자식 클래스 생성자에서 호출할 때 super()를 사용
+            // super()사용시 부모 클래스에 필요한 인수들을 모두 써줘야함
+            // 만약 자식클래스에서 생성자가 필요없다면 생성자를 안써줘도됨. 이때는 자동으로 부모 클래스의 생성자를 호출
+            constructor(str, area, floor) {
+                super(str, area); //부모에서 가져온 속성은 제일 위에 와야함
+                // super(area);
+                this.floor = floor;
+            }
+            elevator(){
+                console.log(`${this.floor}층까지 승강기가 있습니다.`);
+            }
+            // 매서드 오버라이딩 : 자식 클래스에서 부모 클래스의 매서드를 재정의할때 사용하는 용어
+            window(){
+                super.window()
+                console.log('창문을 슬라이딩 합니다.');
+            }
+            aaa(){
+                console.log(`${this.area}평입니다.`);
+            }
+        }
+        const myApart = new Apartment("레미안 아파트",30, 20);
+        myApart.name();
+        myApart.window();
+        myApart.elevator();
+        myApart.aaa();
+
+
+
+    </script>
+</body>
+</html>
