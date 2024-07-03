@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>폼 태그</h3>
+    <form action="/kdt" method="get">
+        <input type="text" placeholder="...입력하세요" disabled /> <br />
+        <input type="password" placeholder="비밀번호"><br />
+        <input type="email" placeholder="이메일"><br />
+        <!-- radio 타입 : 단일 선택 -->
+        <input type="radio" name="gender" value="남">남자
+        <input type="radio" name="gender" value="여">여자 <br>
+        <!-- checkbox 타입 : 복수 선택 가능 -->
+        <input type="checkbox" name="hobby" value="여행">여행
+        <input type="checkbox" name="hobby" value="게임"> 게임
+        <input type="checkbox" name="hobby" value="등산"> 등산
+        <input type="checkbox" name="hobby" value="운동"> 운동 <br>
+
+        <input type="tel"><br>
+        <input type="number"><br>
+        <input type="date"><br>
+        <input type="time"><br>
+        <input type="color"><br>
+
+        <select>
+
+            <% for(let i=1970; i <=2024; i++) { %>
+                <option value="<%= i%>">
+                    <%= i%>
+                </option>
+
+                <%}%>
+
+        </select>
+        <label for="test">클릭</label>
+        <input type="text" placeholder="test" id="test"><br>
+        <fieldset>
+            <legend>제목</legend>
+            <input type="text">
+        </fieldset>
+
+
+
+        <button type="submit">버튼</button>
+    </form>
+
+
+
+</body>
+
+</html>
