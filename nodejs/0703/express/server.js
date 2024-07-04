@@ -6,8 +6,8 @@ const PORT = 8000;
 app.set("view engine", 'ejs');
 app.set("views", './views');
 
-// 정적 파일 세팅 ?"/public"은 라우터가 아니라 폴더?
-app.use("/public", express.static(__dirname + '/public'));
+// 정적 파일 세팅 
+app.use("/abc", express.static(__dirname + '/public'));
 
 // 시간값 출력
 app.use((req, res, next) => {
@@ -38,7 +38,7 @@ app.get("/fruit", (req, res) => {
             { name: 'apple', kor: '사과' },
             { name: 'banana', kor: '바나나' },
             { name: 'grapes', kor: '포도' },
-            { name: 'peaches', kor: '복숭아' }
+            { name: 'peache', kor: '복숭아' }
         ]
     })
 })

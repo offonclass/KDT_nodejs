@@ -7,13 +7,9 @@ app.set('views','./views')
 app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
-    res.render('index')
+    res.render('index2')
 })
 
-app.get('/getForm', (req, res) => {
-    console.log(req.query);
-    res.render('result', {title: 'get요청 결과', userInfo: req.query})
-})
 app.post('/postForm', (req, res) => {
     console.log(req.body);
     res.render('result2', {title: 'post요청 결과', userInfo: req.body})

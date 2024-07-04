@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h3>로그인</h3>
+    <form name="login-form">
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" required />
+        <br/>
+        <label for="password">PW</label>
+        <input type="password" name="password" id="password" required />
+        <br/>
+        <br/>
+        <button type="button" onclick="axiosPost()">로그인</button>
+        <div class="result"></div>
+    </form>
+<script>
+    const resultBox = document.querySelector('.result')
+    function axiosPost() {
+        const form = document.forms['login-form']
+        const data = {
+            id: form.id.value,
+            password: form.password.value,
+        }
+        console.log(data);
+        axios({
+            method: 'post',
+            url:'/axios',
+            data
+        }).then((res) => {
+            console.log('res : ',res);
+            const {id, password, result} = res.data;
+            if(result){
+                resultBox.textContent = `로그인에 성공했습니다!`
+            }else{
+                resultBox.textContent = `ID 와 패스워드가 잘못 되었습니다. 다시 확인해주세요.`
+            }
+
+        })
+    }
+
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@ const express = require('express')
 const app = express();
 const PORT = 8000;
 
-// 미들웨어
+// 뷰 앤진
 app.set("view engine", 'ejs');
 app.set('views', './views');
 // 미들웨어 body-parser

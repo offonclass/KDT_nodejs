@@ -11,28 +11,29 @@
 
 <body>
     <h1>이미지 바꾸기</h1>
-    <img src="/public/images/q.jpg" width="300" height="300">
+    <img src="/abc/images/q.jpg" width="300" height="300">
     <br />
     <% for(let i=0; i < fruit.length; i++) { %>
         <button class="btn <%= fruit[i].name %>">
             <%= fruit[i].kor %>
+            
         </button>
         <% } %>
 
             <script>
                 $('.btn').click(function() {
-                    let name; //파일명
+                    let name1; //파일명
                     if ($(this).hasClass('apple')) {
-                        name = 'apple';
+                        name1 = 'apple';
                     } else if ($(this).hasClass('banana')) {
-                        name = 'bananas';
+                        name1 = 'bananas';
                     } else if ($(this).hasClass('grapes')) {
-                        name = 'grapes';
-                    } else if ($(this).hasClass('peaches')) {
-                        name = 'peaches';
+                        name1 = 'grapes';
+                    } else if ($(this).hasClass('peache')) {
+                        name1 = 'peaches';
                     }
 
-                    $('img').attr("src", `/public/images/${name}.jpg`);
+                    $('img').attr("src", `/abc/images/${name1}.jpg`);
 
                 });
 
