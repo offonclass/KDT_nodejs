@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
@@ -61,22 +59,31 @@
         </fieldset>
         <br>
         <br>
-        <button type="button" onclick="axiosGet()">axios get으로 회원가입</button>
-
-
-
+        <button type="button" onclick="getRegister()">axios get으로 회원가입</button>
     </form>
-
-
+    <br>
+    <br>
+    <div class="result"></div>
     <script>
-        function axiosGet() {
-            const form = document.forms['register-form']
-            const interest = []
-            const checked = document.querySelectorAll('input[name="interest"]:checked')
+        const resultBox = document.querySelector('.result')
+        function getRegister() {
+            const form = document.forms['register-form'];
+
+            const interest = [];
+            const checked = form.querySelectorAll('input[name="interest"]:checked')
+            console.log("checked", checked);
+            // forEach()문
+            // 배열변수.forEach( ( {}안에서 사용할 변수, 인덱스, 배열 ) => {} )
+
+           /*  checked.forEach( (element, index, array) => {
+            console.log('여기!!',element,index,array)
+            }) */
+
             checked.forEach((elem) => {
                 interest.push(elem.value)
             })
-
+            console.log(interest);
+            // 백엔드로 보낼 요청 데이터
             const data = {
                 username: form.username.value,
                 gender: form.gender.value,
@@ -85,19 +92,21 @@
                 birthDay: form.day.value,
                 interest
             }
-            console.log(data)
-            axios({
-                method: 'get',
-                url: '/axios',
-                params: data
-            }).then((res) => {
-                console.log('res : ',res);
-                console.log('data : ',res.data);
-            })
-        }
+        
+        axios({
+            method: 'get',
+            url: '/resultGet',
+            params: data
+
+        }).then((res) => {
+            console.log('res',res);
+            const {username} = res.data.response; // res - 매개변수, data - axios가 만들어준 객체, response - server.js에서 전송하는 객체 안에 만든 키(객체)
+            resultBox.textContent = `${username}님 어서오세요`
+        })
+
+    }
 
 
     </script>
 </body>
-
 </html>

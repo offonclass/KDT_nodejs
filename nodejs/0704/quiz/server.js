@@ -17,7 +17,7 @@ app.get('/axios', (req, res) => {
     console.log('요청값 : ', req.query);
     const { username, gender, birthYear, birthMonth, birthDay, interest } = req.query;
     // 응답
-    const data = {
+    const abc = {
         result: true,
         username,
         gender,
@@ -26,7 +26,7 @@ app.get('/axios', (req, res) => {
         birthDay,
         interest
     };
-    res.json(data);
+    res.json(abc);
 })
 
 

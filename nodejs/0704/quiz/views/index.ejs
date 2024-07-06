@@ -18,8 +18,8 @@
         <br/>
         <br/>
         <button type="button" onclick="axiosPost()">로그인</button>
-        <div class="result"></div>
     </form>
+    <div class="result"></div>
 <script>
     const resultBox = document.querySelector('.result')
     function axiosPost() {
@@ -38,8 +38,10 @@
             const {id, password, result} = res.data;
             if(result){
                 resultBox.textContent = `로그인에 성공했습니다!`
+                resultBox.style.color = 'blue'
             }else{
                 resultBox.textContent = `ID 와 패스워드가 잘못 되었습니다. 다시 확인해주세요.`
+                resultBox.style.color = 'red'
             }
 
         })
