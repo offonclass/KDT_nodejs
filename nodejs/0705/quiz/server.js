@@ -29,3 +29,16 @@ const uploadDetail = multer({
 app.get('/', (req, res) => {
     res.render('index')
 })
+
+// request, response
+app.post('/upload', uploadDetail.single('file'), (req,res) => {
+    console.log('file', req.file);
+    console.log('userInfo', req.body);
+    res.json({ file: req.file, userInfo: req.body })
+})
+
+
+
+app.listen(PORT, () => {
+    console.log(`http://localhost:${PORT}`);
+})

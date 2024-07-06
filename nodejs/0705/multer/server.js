@@ -9,7 +9,7 @@ const PORT = 8000;
 // app.use(express.json());
 // view engine
 app.set('view engine', 'ejs')
-// 정적파일 설장
+// 정적파일 설정
 // http://localhost:8000/uploads/파일명
 app.use('/uploads', express.static(__dirname + '/uploads'))
 

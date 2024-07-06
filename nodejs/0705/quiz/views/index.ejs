@@ -1,15 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
+    <style>
+        .container {
+            background-color: beige;
+            height: 1000px;
+            padding-top: 10px;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        .resultBox {
+            border-radius: 10px;
+        }
+
+        .resultBox img{
+            width: 400px;
+            height: 300px;
+            border-radius: 50px;
+        }
+    </style>
 </head>
+
 <body>
-    <form onsubmit="makeProfile()">
+    <div class="container">
+        <h2>회원가입 페이지</h2>
+        <form onsubmit="makeProfile(event)" name="userInfo">
+            <input type="text" name="id" id="id" placeholder="아이디" required /><br />
+            <input type="password" name="pw" id="pw" placeholder="비밀번호" required /><br />
+            <input type="text" name="userName" id="userName" placeholder="이름" required /><br />
+            <input type="number" name="age" id="age" placeholder="나이" required /><br />
+            <br />
+            <input type="file" name="userImg" id="userImg" required /><br />
+            <br />            
+            <button type="submit">회원가입</button>
+            <br />
+            <br />
 
-
-        
+            <div class="resultBox"></div>
+    </div>
     </form>
+    <script>
+        const resultBox = document.querySelector('.resultBox')
+        function makeProfile(e) {
+            console.log(e);
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append("id", document.querySelector('#id').value)
+            formData.append("pw", document.querySelector('#pw').value)
+            formData.append("userName", document.querySelector('#userName').value)
+            formData.append("age", document.querySelector('#age').value)
+            // file데이터
+            formData.append("file", document.querySelector('#userImg').files[0])
+            console.log(formData);
+
+            axios({
+                method: 'post',
+                url: '/upload',
+                data: formData,
+                header: {
+                    'content-Type': 'multipart/form-data'
+                }
+            }).then((res) => {
+                console.log('res', res);
+                resultBox.innerHTML =
+                    `<img src=${res.data.file.path}>
+                    <br>
+                    <h3>${res.data.userInfo.userName}님 환영합니다!</h3>
+                        <p>아이디 : ${res.data.userInfo.id}</p>
+                        <p>비밀번호 : ${res.data.userInfo.pw}</p>
+                        <p>이름 : ${res.data.userInfo.userName}</p>
+                        <p>나이 : ${res.data.userInfo.age}살</p>
+                    `
+            })
+        }
+
+
+
+    </script>
 </body>
+
 </html>
