@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+    <h3>FORM 싱글 연습</h3>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+
+        <input type="file" name="userfile" /><br />
+        <input type="text" name="title" /><br />
+        <button type="submit">업로드</button>
+    </form>
+ -->
+    <!-- 
+    <h3>FORM 멀티 연습(ver1)</h3>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="userfile" multiple><br />
+        <input type="text" name="title" /><br />
+        <button type="submit">업로드</button>
+    </form>
+
+ -->
+    <!-- 
+    <h3>FORM 멀티 연습(ver2)</h3>
+    <form action="/upload/fields" method="post" enctype="multipart/form-data">
+        <input type="file" name="userfile1" /><br />
+        <input type="text" name="title1" /><br />
+        <input type="file" name="userfile2" /><br />
+        <input type="text" name="title2" /><br />
+        <button type="submit">업로드</button>
+    </form>
+ -->
+    <h3>동적 파일 업로드</h3>
+    <form>
+        <input type="file" id="userfile" /><br />
+        <input type="text" id="title" /><br />
+        <button type="button" onclick="fileUpload()">업로드</button><br />
+    </form>
+    <br />
+    <br />
+    <div class="resultBox"></div>
+
+    <script>
+        const resultBox = document.querySelector('.resultBox')
+        function fileUpload() {
+            const file = document.querySelector("#userfile")
+            console.log(file.files);
+            // 파일에 접근하기 위해서 변수.files를 사용하고
+            // 여기서 file.files는 배열을 반환하며, 우리가 원하는 값은
+            // 첫번째 요소로 반환되기 때문에 file.files[0]만 사용함
+            console.log(file.files[0]);
+
+            // FormData: 자바스크립트 내장객체 이며, 폼데이터를 생성해줌
+            const formData = new FormData();
+            // append(key, value)
+            // 파일들은 항상 마지막에 선언
+            formData.append("abc", document.querySelector("#title").value)
+            formData.append("userfile1", file.files[0]) //파일들은 항상 마지막에 선언
+            console.log('formData', formData);
+
+            axios({
+                method: 'post',
+                url: '/upload/axios',
+                data: formData,
+                headers: {
+                    'content-Type': 'multipart/form-data'
+                }
+
+            }).then((res) => {
+                console.log('res', res);
+                const file1 = res.data.file1.path;
+                const title = res.data.title1.abc;
+                console.log(file1);
+                const filePath = `abcd/${res.data.file1.filename}`
+                resultBox.innerHTML = `<p>이름은 ${title}</p><img src=${filePath}>`
+            })
+        }
+
+
+    </script>
+
+</body>
+
+</html>

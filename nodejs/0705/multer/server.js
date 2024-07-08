@@ -9,15 +9,22 @@ const PORT = 8000;
 // app.use(express.json());
 // view engine
 app.set('view engine', 'ejs')
+// app.set('views','./views')
+
 // 정적파일 설정
 // http://localhost:8000/uploads/파일명
 app.use('/uploads', express.static(__dirname + '/uploads'))
 
 // multer
+
+
+/* 
 const upload = multer({
     // dest: 업로드한 파일을 저장할 폴더
     dest: 'uploads/',
 })
+
+ */
 
 // multer 세부설정
 const uploadDetail = multer({
@@ -43,7 +50,8 @@ const uploadDetail = multer({
     }),
     // limits: 파일 용량 제한
     limits: {fileSize: 1024 * 1024 * 5}, //5mb제한
-
+    
+    
 })
 
 // 방법2

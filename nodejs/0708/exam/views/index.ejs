@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h3>동적 파일 업로드 실습</h3>
+    <form onsubmit="registerFunc(event)" name="register-form">
+        <input type="text" id="id" placeholder="아이디" required><br />
+        <input type="password" id="pw" placeholder="비밀번호" required><br />
+        <input type="text" id="username" placeholder="이름" required><br />
+        <input type="number" id="age" placeholder="나이" required><br />
+        <input type="file" id="myfile"><br />
+        <button type="submit">회원가입</button>
+    </form>
+    <br />
+    <br />
+    <div class="resultBox"></div>
+    <script>
+        const resultBox = document.querySelector('.resultBox')
+        function registerFunc(e) {
+            e.preventDefault();
+            // console.log(e);
+            const id = document.querySelector("#id").value;
+            const pw = document.querySelector("#pw").value;
+            const username = document.querySelector("#username").value;
+            const age = document.querySelector("#age").value;
+            const file = document.querySelector("#myfile").files[0];
+            console.log(file);
+            const formData = new FormData();
+            formData.append('id', id)
+            formData.append('pw', pw)
+            formData.append('username', username)
+            formData.append('age', age)
+            formData.append('userfile', file)
+            console.log(formData);
+
+            axios({
+                method: 'post',
+                url: 'uploads/axios',
+                data: formData,
+                headers: {
+                    'content-Type': 'multipart/fome-data'
+                }
+            }).then((res) => {
+                console.log('res', res);
+                resultBox.innerHTML = `<img src=${res.data.filename} style="width: 200px">
+                <div><strong>${id}님 환영 합니다</strong></div>
+                <div>비밀번호: ${pw}</div>
+                <div>이름: ${username}</div>
+                <div>나이: ${age}</div>
+                
+                `
+            })
+        }
+    </script>
+</body>
+</html>
