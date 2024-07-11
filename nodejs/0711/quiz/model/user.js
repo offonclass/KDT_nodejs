@@ -1,7 +1,7 @@
 require('dotenv').config()
-const mysql = require('mysql2/promise'); //promise -> mysql을 비동기 처리로 활용하기 위함
-// mysql연결
+const mysql = require('mysql2/promise'); 
 
+// mySQL연결
 const getConn = async () => {
     return await mysql.createConnection({
         host: process.env.HOST,
@@ -11,10 +11,33 @@ const getConn = async () => {
     })
 }
 
-// 쿼리문
-const allVisitor = async () => {
-    const conn = await getConn(); //mysql접속
-    const query = 'SELECT * FROM visitor';
+// 회원정보 INSERT
+const signUp = async (userid, pw, name) => {
+    if(userid === "" || pw === "" || name === "") {
+        return;
+    }
+    const conn = await getConn();
+    const query = 'INSERT INTO user (userid, pw, name) VALUES (?, ?, ?)'
+    const [result] = await conn.query(query, [userid, pw, name])
+    console.log('model_result', result);
+    await conn.end();
+    return result;
+}
+
+// db와 비교후 id 추출
+const selectUser = async (userid, pw) => {
+    const conn = await getConn();
+    const query = 'SELECT * FROM user WHERE userid = ? and pw = ?'
+    const [result] = await conn.query(query, [userid, pw])
+    console.log('model_result', result);
+    await conn.end();
+    return result;
+}
+
+
+const allUser = async () => {
+    const conn = await getConn(); 
+    const query = 'SELECT * FROM user';
     
     const [row] = await conn.query(query);
     console.log('model', row);
@@ -22,53 +45,9 @@ const allVisitor = async () => {
     return row;
 }
 
-
-const getVisitor = async (id) => {
+const deleteUser = async (id) => {
     const conn = await getConn();
-    // 
-    /* 
-    방법1 - 문자열 보간법
-    * 단점
-    1. sql 인젝션 공격에 취약
-    2. 문자열에 특수문자가 포함될 경우 오류가 발생될 수도 있음
-
-    * 보완 방법 prepared statement
-        => select * from visitor where id = ?
-    */
-
-    // const query = `select * from visitor where id = ${id}`
-    // const [row] = await conn.query(query);
-
-    const query = 'select * from visitor where id = ?';
-    const [row] = await conn.query(query, [id]);
-
-
-    await conn.end();
-    return row;
-}
-
-const postVisitor = async (name, comment) => {
-    const conn = await getConn();
-    // INSERT INTO visitor (name, comment) VALUES (값1, 값2);
-    const query = 'INSERT INTO visitor (name, comment) VALUES (?, ?)'
-    const [result] = await conn.query(query, [name, comment])
-    console.log('model', result);
-    await conn.end();
-    return result;
-}
-
-const patchVisitor = async (id, name, comment) => {
-    const conn = await getConn();
-    const query = 'update visitor set name = ?, comment = ? where id = ?'
-    const [result] = await conn.query(query, [name, comment, id])
-    console.log('result', result);
-    await conn.end()
-    return result;
-}
-
-const deleteVisitor = async (id) => {
-    const conn = await getConn();
-    const query = 'delete from visitor where id = ?'
+    const query = 'delete from user where id = ?'
     const [result] = await conn.query(query, [id])
     console.log('result', result);
     await conn.end();
@@ -76,4 +55,29 @@ const deleteVisitor = async (id) => {
 }
 
 
-module.exports={ allVisitor, getVisitor, postVisitor, patchVisitor, deleteVisitor }
+const getUser = async (id) => {
+    const conn = await getConn();
+
+    const query = 'select * from user where id = ?';
+    const [row] = await conn.query(query, [id]);
+    console.log('model_row', row);
+
+    await conn.end();
+    return row;
+}
+
+
+
+const patchUser = async (userid, pw, name, id) => {
+    const conn = await getConn();
+    const query = 'update user set userid = ?, pw = ?, name = ? where id = ?'
+    const [result] = await conn.query(query, [userid, pw, name, id])
+    console.log('result', result);
+    await conn.end()
+    return result;
+}
+
+
+
+
+module.exports={ signUp, selectUser, allUser, deleteUser, getUser,  patchUser }

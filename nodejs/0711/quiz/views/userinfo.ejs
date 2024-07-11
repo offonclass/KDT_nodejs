@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
 
@@ -21,17 +22,87 @@
 
         </tbody>
     </table>
+    <br />
+    <br />
     <fieldset>
         <legend>회원 정보 수정하기</legend>
-        <input type="text" id="userid" placeholder="아이디" /><br />
-        <input type="password" id="pw" placeholder="비밀번호" /><br />
-        <input type="text" id="name" placeholder="이름" /><br />
-        <button type="button" onclick="updateFunc()">회원가입</button>
+        <input type="text" id="userid" placeholder="변경할 아이디" /><br />
+        <input type="password" id="pw" placeholder="변경할 비밀번호" /><br />
+        <input type="text" id="name" placeholder="변경할 이름" /><br />
+        <br />
+        <button type="button" onclick="editFunc()">수정</button>
     </fieldset>
     <br />
     <br />
     <br />
     <button type="button" onclick="deleteFunc()">회원 탈퇴</button>
+
+    <script>
+        const tbody = document.querySelector('tbody');
+        console.log(document.location);
+        (async function () {
+            const [_, pathname] = document.location.pathname.split('/info/');
+            console.log('pathname', pathname);
+
+            // 회원정보 하나 가져오기
+            const res = await axios({
+                method: 'get',
+                url: `/api/user/info/${pathname}`
+            });
+            console.log('res', res);
+
+            tbody.innerHTML = `
+            <tr>
+                <td>${res.data.result.userid}</td>
+                <td>${res.data.result.name}</td>
+                <td>${res.data.result.pw}</td>
+            </tr>
+            `
+        })();
+
+
+        async function editFunc() {
+            const [_, pathname] = document.location.pathname.split('/info/');
+            const userid = document.querySelector('#userid').value
+            const pw = document.querySelector('#pw').value
+            const name = document.querySelector('#name').value
+            const res = await axios({
+                method: 'patch',
+                url: '/api/user/update',
+                data: {
+                    userid,
+                    pw,
+                    name,
+                    id: pathname,
+                }
+            });
+            console.log(res.data);
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('오류때문에 수정되지 않았습니다.');
+            }
+        }
+
+        async function deleteFunc() {
+            if (!confirm('정말로 회원탈퇴를 하시겠습니까? (탈퇴 후 로그인 페이지로 이동합니다.)')) {
+                return
+            }
+            const [_, pathname] = document.location.pathname.split('/info/');
+            const res = await axios({
+                method: 'delete',
+                url: '/api/user/delete',
+                data: {
+                    id: pathname,
+                }
+            });
+            if (res.data.result) {
+                window.location.href = '/';
+            } else {
+                alert('오류때문에 삭제되지 않습니다.');
+            }
+        } 
+    </script>
 </body>
 
 </html>

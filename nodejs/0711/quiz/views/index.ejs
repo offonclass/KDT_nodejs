@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
 
@@ -15,6 +16,33 @@
         <button type="button" onclick="loginFunc()">로그인</button>
         <a href="/signup">회원가입</a>
     </form>
+    <div class="resultBox"></div>
+
+    <script>
+        const resultBox = document.querySelector('.resultBox');
+        async function loginFunc() {
+            const userid = document.querySelector('#userid').value;
+            const pw = document.querySelector('#pw').value;
+            const data = { userid, pw }
+            console.log(data);
+
+            const res = await axios({
+                method: 'post',
+                url: '/api/user/login',
+                data,
+            })
+            console.log('res', res.data);
+            if (res.data.id === 1) {
+                window.location.href = `/admin`
+            } else if(res.data && res.data.id !== 1) {
+                window.location.href = `/info/${res.data.id}`
+            } else {
+                resultBox.innerHTML = `<p>로그인에 실패했습니다. 아이디와 비밀번호를 확인하세요.</p>`
+            }
+        }
+
+
+    </script>
 
 </body>
 

@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <h3>전체 회원정보</h3>
     <table border="1" cellspacing="0">
@@ -21,5 +24,49 @@
 
         </tbody>
     </table>
+    <script>
+        const tbody = document.querySelector('tbody');
+        (async function () {
+            const res = await axios({
+                method: 'get',
+                url: '/api/user/all',
+            })
+            console.log('res', res.data);
+            for (let i = 0; i < res.data.result.length; i++) {
+                const html = `
+                <tr>
+                    <td>${res.data.result[i].id}</td>
+                    <td>${res.data.result[i].userid}</td>
+                    <td>${res.data.result[i].name}</td>
+                    <td>${res.data.result[i].pw}</td>
+                    <td><button type="button" onclick="deleteFunc(${res.data.result[i].id})">
+                        삭제</button></td>
+                </tr>
+            `
+                tbody.insertAdjacentHTML('beforeend', html)
+            }
+        })();
+
+
+        async function deleteFunc(id) {
+            if (!confirm('회원 계정을 삭제합니다. 괜찮습니까?')) {
+                return
+            }
+
+            const res = await axios({
+                method: 'delete',
+                url: '/api/user/delete',
+                data: {
+                    id: Number(id),
+                }
+            });
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('오류때문에 삭제되지 않습니다.');
+            }
+        } 
+    </script>
 </body>
+
 </html>

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
 
@@ -14,6 +15,34 @@
     <input type="text" id="name" placeholder="이름" /><br />
     <button type="button" onclick="signUpFunc()">회원가입</button>
     <div class="resultBox"></div>
+
+    <script>
+        const resultBox = document.querySelector('.resultBox');
+        async function signUpFunc() {
+            const userid = document.querySelector('#userid').value;
+            const pw = document.querySelector('#pw').value;
+            const name = document.querySelector('#name').value;
+            const data = { userid, pw, name };
+            console.log(data);
+            const res = await axios({
+                method: 'post',
+                url: '/api/user/signup',
+                data
+            })
+            console.log(res);
+            if(res.data.result) {
+                resultBox.innerHTML = `<p>회원가입에 성공했습니다! <a href="/">로그인 페이지로 이동</a></p>`
+            } else {
+                resultBox.innerHTML = `<p>회원가입에 실패했습니다. 내용을 모두 기입해주세요.</p>`
+                
+            }
+        }
+
+
+    </script>
+
+
+
 </body>
 
 </html>
