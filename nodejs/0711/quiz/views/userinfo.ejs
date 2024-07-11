@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>회원 정보</h3>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>비밀번호</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <fieldset>
+        <legend>회원 정보 수정하기</legend>
+        <input type="text" id="userid" placeholder="아이디" /><br />
+        <input type="password" id="pw" placeholder="비밀번호" /><br />
+        <input type="text" id="name" placeholder="이름" /><br />
+        <button type="button" onclick="updateFunc()">회원가입</button>
+    </fieldset>
+    <br />
+    <br />
+    <br />
+    <button type="button" onclick="deleteFunc()">회원 탈퇴</button>
+</body>
+
+</html>

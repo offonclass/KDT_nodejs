@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>방명록</h3>
+    <form name="visitor-form">
+        <fieldset>
+            <legend>방명록 등록</legend>
+            <input type="text" id="name" placeholder="방문자 이름" /><br />
+            <input type="text" id="comment" placeholder="방명록 작성" /><br />
+            <button type="button" onclick="visitorFunc()">등록</button>
+        </fieldset>
+    </form>
+    <br />
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>수정</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <script>
+        const tbody = document.querySelector('tbody');
+        console.log(document.location);
+        (async function () {
+            const [_, pathname] = document.location.pathname.split('/visitor/');
+            console.log('pathname', pathname);
+            let res;
+            if (pathname) {
+                // 방명록 하나 가져오기
+                res = await axios({
+                    method: 'get',
+                    url: `/api/visitor/${Number(pathname)}`
+                });
+                console.log('res', res);
+
+            } else {
+                // 전체 방명록 가져오기
+                res = await axios({
+                    method: 'get',
+                    url: '/api/visitor',
+                })
+            }
+            console.log('res', res);
+            for (let i = 0; i < res.data.result.length; i++) {
+                const html = `
+                <tr>
+                    <td>${res.data.result[i].id}</td>
+                    <td>${res.data.result[i].name}</td>
+                    <td>${res.data.result[i].comment}</td>
+                    <td><button type="button" onclick="editFunc(${res.data.result[i].id})">
+                        수정</button></td>
+                    <td><button type="button" onclick="deleteFunc(${res.data.result[i].id})">
+                        삭제</button></td>
+                </tr>
+            `
+                tbody.insertAdjacentHTML('beforeend', html)
+            }
+
+        })();
+
+        async function visitorFunc() {
+            const form = document.forms['visitor-form']
+            const res = await axios({
+                method: 'post',
+                url: '/api/visitor/write',
+                data: {
+                    name: form.name.value,
+                    comment: form.comment.value
+                }
+            });
+            console.log('res', res);
+            const html = `
+                <tr>
+                    <td>${res.data.id}</td>
+                    <td>${res.data.name}</td>
+                    <td>${res.data.comment}</td>
+                    <td><button type="button" onclick="editFunc(${res.data.id})">
+                        수정</button></td>
+                    <td><button type="button" onclick="deletetFunc(${res.data.id})">
+                        삭제</button></td>
+                </tr>
+            `
+            tbody.insertAdjacentHTML('beforeend', html)
+        }
+
+        async function editFunc(id) {
+            const form = document.forms["visitor-form"]
+            const res = await axios({
+                method: 'patch',
+                url: '/api/visitor/update',
+                data: {
+                    name: form.name.value,
+                    comment: form.comment.value,
+                    id: Number(id),
+                }
+            });
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('오류때문에 수정되지 않았습니다.');
+            }
+        }
+
+        async function deleteFunc(id) {
+            if (!confirm('삭제 하시겠습니까?')) {
+                return
+            }
+
+            const form = document.forms["visitor-form"]
+            const res = await axios({
+                method: 'delete',
+                url: '/api/visitor/delete',
+                data: {
+                    id: Number(id),
+                }
+            });
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('오류때문에 삭제되지 않습니다.');
+            }
+        }
+    </script>
+</body>
+
+</html>

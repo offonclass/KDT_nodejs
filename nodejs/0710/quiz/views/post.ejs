@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>POST로그인</h3>
+    <form name="login-form">
+        <label for="id">ID</label>
+        <input type="text" name="id" id="id" required />
+        <br />
+        <label for="password">PW</label>
+        <input type="password" name="password" id="password" required />
+        <br />
+        <br />
+        <button type="button" onclick="login()">로그인</button>
+    </form>
+    <br />
+    <br />
+    <div class="result"></div>
+
+    <script>
+        const resultBox = document.querySelector('.result')
+        function login() {
+            const data = {
+                id: document.querySelector('#id').value,
+                pw: document.querySelector('#password').value
+            }
+            axios({
+                method: 'post',
+                url: '/resultPost',
+                data,
+            }).then((value) => {
+                console.log('value', value);
+                const {result, userId} = value.data
+                console.log();
+                if(result) {
+                    resultBox.textContent = `${userId}님 환영합니다`
+                    resultBox.style.color = 'blue'
+                } else {
+                    resultBox.textContent = `아이디 또는 패스워드가 틀렸습니다.`
+                    resultBox.style.color = 'red'
+                    
+                }
+            })
+        }
+
+
+    </script>
+</body>
+
+</html>
