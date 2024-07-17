@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <h3>로그인페이지</h3>
+        <form>
+            <input type="text" id="id" placeholder="아이디" /><br />
+            <input type="password" id="pw" placeholder="비밀번호" /><br />
+            <button type="button" onclick="loginFunc()">로그인</button>
+        </form>
+        <script>
+            function loginFunc() {
+                const data = {
+                    userid: document.querySelector('#id').value,
+                    pw: document.querySelector('#pw').value,
+                };
+                axios({
+                    method: 'post',
+                    url: '/api/member/login',
+                    data,
+                }).then((res) => {
+                    console.log(res);
+                    if (res.data.result) {
+                        alert(`환영합니다! ${res.data.response.username}님`);
+                        //localStorage: 브라우저에 정보를 저장, 브라우저 닫혀도 계속유지
+                        //사용법
+                        //저장방법: localStorage.setItem("key값", "value값")
+                        //이용방법: localStorage.getItem("key값")
+                        //삭제방법: localStorage.claer()
+                        //sessionStorage: 브라우저에 정보를저장, 브라우저를 닫으면 정보삭제
+                        localStorage.setItem('login', res.data.response.id);
+                        document.location.href = '/profile';
+                    } else {
+                        if (res.data.code === 1001) {
+                            alert('죄송합니다. 가입된 정보가 존재하지 않습니다.');
+                        } else if (res.data.code === 1000) {
+                            if (confirm('비밀번호가 틀렸습니다. 비밀번호찾기를 하시겠습니까?')) {
+                                console.log('비밀번호 찾기 페이지로 이동');
+                            }
+                        }
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>

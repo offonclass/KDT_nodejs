@@ -54,7 +54,6 @@ const deleteUser = async (id) => {
     return result;
 }
 
-
 const getUser = async (id) => {
     const conn = await getConn();
 
@@ -65,8 +64,6 @@ const getUser = async (id) => {
     await conn.end();
     return row;
 }
-
-
 
 const patchUser = async (userid, pw, name, id) => {
     const conn = await getConn();

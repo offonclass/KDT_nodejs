@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <h3>회원조회 페이지</h3>
+        <form name="member-form">
+            <input type="text" id="userid" readonly /><br />
+            <input type="password" id="pw" placeholder="비밀번호" /><br />
+            <input type="text" id="name" placeholder="이름" /><br />
+            <button type="button" onclick="updateFunc()">수정</button>
+            <button type="button" onclick="deleteFunc()">삭제</button>
+        </form>
+        <script>
+            const id = localStorage.getItem('login');
+            console.log(id);
+            (async function () {
+                const result = await axios({
+                    method: 'get',
+                    url: `/api/member/info/${id}`,
+                });
+                console.log(result);
+                const { userid, pw, username } = result.data.response;
+                document.querySelector('#userid').value = userid;
+                document.querySelector('#pw').value = pw;
+                document.querySelector('#name').value = username;
+            })();
+
+            function updateFunc() {
+                const form = document.forms['member-form'];
+                const data = {
+                    id: Number(id),
+                    pw: form.pw.value,
+                    username: form.name.value,
+                };
+                axios({
+                    method: 'patch',
+                    url: '/api/member/update',
+                    data,
+                }).then((res) => {
+                    alert('회원정보가 수정되었습니다');
+                    document.location.reload();
+                });
+            }
+            function deleteFunc() {
+                if (!confirm('탈퇴하시겠습니까?')) {
+                    return;
+                }
+                axios({
+                    method: 'delete',
+                    url: '/api/member/delete',
+                    data: {
+                        id: Number(id),
+                    },
+                }).then((res) => {
+                    alert('탈퇴가 완료되었습니다');
+                    document.location.href = '/';
+                });
+            }
+        </script>
+    </body>
+</html>

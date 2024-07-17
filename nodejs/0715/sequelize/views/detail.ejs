@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <h3>글 상세내용</h3>
+        <a href="/post"><-- 이전페이지</a>
+        <form>
+            <input type="text" id="title" placeholder="제목" /><br />
+            <textarea id="content" cols="30" rows="10" placeholder="내용"></textarea><br />
+            <button type="button" onclick="updateFunc()">수정</button>
+            <button type="button" onclick="deleteFunc()">삭제</button>
+        </form>
+        <script>
+            const [_, pathname] = document.location.pathname.split('/post/');
+            console.log(pathname);
+            (async function () {
+                const res = await axios({
+                    method: 'get',
+                    url: `/api/post/${pathname}`,
+                });
+                console.log(res);
+                const { title, content } = res.data.data;
+                document.querySelector('#title').value = title;
+                document.querySelector('#content').value = content;
+            })();
+
+            async function updateFunc() {
+                const res = await axios({
+                    method: 'patch',
+                    url: '/api/post/update',
+                    data: {
+                        id: Number(pathname),
+                        title: document.querySelector('#title').value,
+                        content: document.querySelector('#content').value,
+                    },
+                });
+                if (res.data.result) {
+                    document.location.reload();
+                }
+            }
+
+            async function deleteFunc() {
+                if (!confirm('삭제하시겠습니까?')) {
+                    return;
+                }
+
+                const res = await axios({
+                    method: 'delete',
+                    url: '/api/post/delete',
+                    data: {
+                        id: Number(pathname),
+                    },
+                });
+                if (res.data.result) {
+                    document.location.href = '/post';
+                }
+            }
+        </script>
+    </body>
+</html>
