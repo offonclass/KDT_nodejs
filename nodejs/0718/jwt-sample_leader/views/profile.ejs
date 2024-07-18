@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <h3>회원조회 페이지</h3>
+        <form>
+            <input type="text" id="userId" readonly /><br />
+            <input type="password" id="pw" placeholder="비밀번호" /><br />
+            <input type="text" id="name" placeholder="이름" /><br />
+            <input type="number" id="age" placeholder="나이" /><br />
+            <input type="email" id="email" placeholder="이메일" /><br />
+            <button type="button" onclick="updateFunc()">수정</button>
+            <button type="button" onclick="deleteFunc()">삭제</button>
+        </form>
+        <script>
+            (async function () {
+                const res = await axios({
+                    method: 'get',
+                    url: '/api/member/info',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                const { userId, password, profile } = res.data.response;
+                const { username, age, email } = profile;
+                document.querySelector('#userId').value = userId;
+                document.querySelector('#pw').value = password;
+                document.querySelector('#name').value = username;
+                document.querySelector('#age').value = age;
+                document.querySelector('#email').value = email;
+            })();
+
+            async function updateFunc() {
+                const data = {
+                    password: document.querySelector('#pw').value,
+                    username: document.querySelector('#name').value,
+                    age: document.querySelector('#age').value,
+                    email: document.querySelector('#email').value,
+                };
+                const res = axios({
+                    method: 'patch',
+                    url: '/api/member/update',
+                    data,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                alert('회원정보가 수정되었습니다');
+                document.location.reload();
+            }
+            async function deleteFunc() {
+                if (!confirm('탈퇴하시겠습니까?')) {
+                    return;
+                }
+                const res = axios({
+                    method: 'delete',
+                    url: '/api/member/delete',
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    },
+                });
+                alert('탈퇴가 완료되었습니다');
+                document.location.href = '/';
+            }
+        </script>
+    </body>
+</html>

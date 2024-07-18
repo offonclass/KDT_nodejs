@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>회원조회 페이지</h3>
+    <form name="member-form">
+        <input type="text" id="userid" readonly /><br />
+        <input type="password" id="pw" placeholder="비밀번호" /><br />
+        <input type="text" id="name" placeholder="이름" /><br />
+        <input type="number" id="age" placeholder="나이" /><br />
+        <input type="email" id="email" placeholder="이메일" /><br />
+        <button type="button" onclick="updateFunc()">수정</button>
+        <button type="button" onclick="deleteFunc()">삭제</button>
+    </form>
+    <script>
+
+        (async function () {
+            const res = await axios({
+                method: 'get',
+                url: '/api/member/info',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                }
+            })
+            console.log(res.data);
+            const { userId, password, profile } = res.data.response;
+                document.querySelector('#userid').value = userId;
+                document.querySelector('#pw').value = password;
+                document.querySelector('#name').value = profile.username;
+                document.querySelector('#age').value = profile.age;
+                document.querySelector('#email').value = profile.email;
+        })();
+    </script>
+</body>
+
+</html>
