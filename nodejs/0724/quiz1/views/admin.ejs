@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <h3>관리자 페이지</h3>
+    <a href="/submitBook">도서 등록</a><br>
+    <a href="/bookList">도서 목록</a><br>
+    <a href="/userList">사용자 목록</a><br>
+
+    <script>
+        (async function () {
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/admin',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                return;
+            } else {
+                alert('관리자 권한 없음')
+                document.location.href = '/'
+            }
+        })()
+    </script>
+</body>
+
+</html>

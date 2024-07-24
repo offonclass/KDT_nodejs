@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h3>도서대여 시스템</h3>
+    <form>
+        <input type="email" id="email" placeholder="아이디(이메일주소)"><br />
+        <input type="password" id="pw" placeholder="비밀번호"><br /><br />
+        <button type="button" onclick="loginFunc()">로그인</button>
+        <a href="/signup">회원가입</a>
+        <div id="resultBox"></div>
+    </form>
+    <script>
+        const resultBox = document.querySelector('#resultBox')
+        const loginFunc = async () => {
+            const pw = document.querySelector('#pw').value
+            const email = document.querySelector('#email').value
+            const loginData = { pw, email};
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/login',
+                data: loginData,
+            })
+            console.log('res!!', res);
+            if(res.data.result){
+                if(res.data.email === 'admin@admin.com') {
+                    localStorage.setItem('token', res.data.token )
+                    document.location.href = '/admin'
+                } else {
+                    localStorage.setItem('token', res.data.token )
+                    document.location.href = '/userMain'
+                }
+            } else {
+                resultBox.innerHTML = '<p>회원 정보가 잘못되었습니다. 다시 입력해 주세요</p>'
+            }
+        }
+    </script>
+</body>
+</html>

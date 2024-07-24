@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h3>회원가입</h3>
+    <form>
+        <input type="email" id="email" placeholder="이메일"><br />
+        <input type="password" id="pw" placeholder="비밀번호"><br />
+        <input type="text" id="userName" placeholder="이름"><br /><br />
+        <button type="button" onclick="signupFunc()">회원가입</button>
+        <a href="/">로그인</a>
+    </form>
+    <script>
+        const signupFunc = async () => {
+            const userName = document.querySelector('#userName').value
+            const pw = document.querySelector('#pw').value
+            const email = document.querySelector('#email').value
+            const signupData = {userName, pw, email};
+
+            const res = await axios({
+                method: 'post',
+                url: 'api/library/signup',
+                data: signupData
+            })
+            const {result, message} = res.data;
+            if(result) {
+                alert('회원가입 성공!')
+                document.location.href = '/'
+            } else if(message === '입력사항 누락') {
+                alert('입력사항 누락! 모두 입력해주세요')
+            } else if(message === '이메일 중복') {
+                alert('중복된 이메일 주소입니다.')
+            } else {
+                alert('서버오류로 인한 회원가입 실패')
+            }
+        }
+    </script>
+</body>
+</html>

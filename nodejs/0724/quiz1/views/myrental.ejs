@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        td {
+            text-align: center;
+            padding: 5px 8px;
+        }
+
+        #notice {
+            color: rgb(120, 120, 120);
+        }
+
+        #title {
+            font-size: 20px;
+            margin-left: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>나의 대여 현황</h3>
+    <label>사용자 이름 </label><input type="text" id="userName" readonly>
+    <br>
+    <br>
+    <br>
+    <p id="#title">[대여 목록]</p>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>책 제목</th>
+                <th>대여일</th>
+                <th>반납일</th>
+                <th>반납</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <p id="notice">반납일은 대여일로부터 7일 후 입니다.</p>
+    <br>
+    <a href="/userMain">돌아가기</a>
+    <script>
+        (async function () {
+            const tbody = document.querySelector('tbody')
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/myRental',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                const rentalList = res.data.rentalList;
+                document.querySelector('#userName').value = rentalList[0].userName;
+                // console.log(rentalList);
+                rentalList.forEach((rental) => {
+                    tbody.innerHTML +=
+                        `<tr>
+                                <td>${rental.bookName}</td>
+                                <td>${rental.rentalDate}</td>
+                                <td>${rental.returnDate}</td>
+                                <td><button onclick="returnFunc(${rental.id})">반납</button></td>
+                            </tr>`
+                })
+
+            } else {
+                alert('서버 오류')
+                console.log(res);
+                // document.location.href = '/'
+            }
+        })()
+
+        const returnFunc = async (id) => {
+            if (!confirm('반납 하시겠습니까?')) {
+                return;
+            }
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/return',
+                data: { id },
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('서버오류로 반납 실패')
+            }
+        }
+    </script>
+</body>
+
+</html>

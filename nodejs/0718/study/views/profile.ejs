@@ -1,20 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <h3>회원조회 페이지</h3>
     <form name="member-form">
-        <input type="text" id="userid" readonly /><br />
+        <input type="text" id="userId" readonly /><br />
         <input type="password" id="pw" placeholder="비밀번호" /><br />
-        <input type="text" id="name" placeholder="이름" /><br />
+        <input type="text" id="username" placeholder="이름" /><br />
         <input type="number" id="age" placeholder="나이" /><br />
         <input type="email" id="email" placeholder="이메일" /><br />
         <button type="button" onclick="updateFunc()">수정</button>
         <button type="button" onclick="deleteFunc()">삭제</button>
     </form>
+    <script>
+        (async function () {
+            const res = await axios({
+                method: 'post',
+                url: '/api/user/profile',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            console.log('res!!', res.data);
+            if (res.data.result) {
+                const { userId, pw, username, age, email } = res.data.response
+                document.querySelector('#userId').value = userId;
+                document.querySelector('#pw').value = pw;
+                document.querySelector('#username').value = username;
+                document.querySelector('#age').value = age;
+                document.querySelector('#email').value = email;
+            } else {
+                alert('회원정보를 불러올 수 없습니다.')
+            }
+        })()
+
+        const updateFunc = async () => {
+            const pw = document.querySelector('#pw').value
+            const username = document.querySelector('#username').value
+            const age = document.querySelector('#age').value
+            const email = document.querySelector('#email').value
+            const data = {pw, username, age, email}
+            const res = await axios({
+                method: 'patch',
+                url: '/api/user/update',
+                data,
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            console.log('updateRes!!', res);
+            if(res.data.result) {
+                alert('회원정보가 수정되었습니다.')
+                document.location.reload();
+            } else {
+                alert('회원정보 수정 실패')
+            }
+        }
+
+        const deleteFunc = async () => {
+            if(!confirm('탈퇴하시겠습니까?')){
+                return;
+            }
+            const res = await axios({
+                method: 'delete',
+                url: '/api/user/delete',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if(res.data.result){
+                alert('회원탈퇴 되었습니다.')
+                document.location.href = '/'
+            } else {
+                alert('서버오류로 회원탈퇴가 되지 않았습니다.')
+            }
+        }
+
+    </script>
 </body>
+
 </html>

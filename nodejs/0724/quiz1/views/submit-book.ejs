@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        p {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>도서 등록</h3>
+    <input type="text" id="bookName" placeholder="도서 이름"><br>
+    <input type="text" id="author" placeholder="작가"><br>
+    <input type="text" id="publishDate" placeholder="출판일"><br>
+    <div id="resultBox"></div><br>
+    <button onclick="submitFunc()">등록</button>
+    <a href="/admin">돌아가기</a>
+    <script>
+        const resultBox = document.querySelector('#resultBox')
+        const submitFunc = async () => {
+            const bookName = document.querySelector('#bookName').value;
+            const author = document.querySelector('#author').value;
+            const publishDate = document.querySelector('#publishDate').value;
+            const bookData = { bookName, author, publishDate }
+
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/submitBook',
+                data: bookData
+            })
+            console.log(res);
+            const p = document.createElement('p')
+            
+            if (res.data.result) {
+                console.log('등록 완');
+                alert('도서가 등록되었습니다.')
+                document.location.reload();
+            } else if (res.data.message === '도서 제목 중복') {
+                resultBox.innerHTML = '<p>이미 도서목록에 등록되어있는 도서 제목입니다.</p>'
+            } else {
+                alert('서버 오류로 인한 등록 실패')
+            }
+        }
+    </script>
+</body>
+
+</html>

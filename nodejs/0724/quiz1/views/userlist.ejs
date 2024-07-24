@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        td {
+            text-align: center;
+            padding: 5px 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>사용자 목록</h3>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>대여 목록 확인</th>
+            </tr>
+        </thead>
+        <tbody id="users"></tbody>
+    </table>
+
+    <h3 id="userRentals"></h3>
+    <table id="rentalTable" border="1" cellspacing="0" hidden>
+        <thead>
+            <tr>
+                <th>책 제목</th>
+                <th>대여일</th>
+                <th>반납일</th>
+                <th>반납</th>
+            </tr>
+        </thead>
+        <tbody id="rentals"></tbody>
+    </table>
+
+    <script>
+        (async function () {
+            const users = document.querySelector('#users')
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/userList',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                const userList = res.data.userList;
+                console.log(userList);
+                userList.forEach((user) => {
+                    users.innerHTML +=
+                        `<tr>
+                            <td>${user.userName}</td>
+                            <td>${user.email}</td>
+                            <td><button onclick="showRentals(${user.id})">확인</button></td>
+                        </tr>`
+                })
+
+            } else {
+                alert('관리자 권한 없음')
+                document.location.href = '/'
+            }
+        })()
+
+        const showRentals = async (id) => {
+            const rentals = document.querySelector('#rentals')
+            const userRentals = document.querySelector('#userRentals')
+            const rentalTable = document.querySelector('#rentalTable')
+            rentalTable.removeAttribute('hidden')
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/showRentals',
+                data: { id }
+            })
+            const rentalList = res.data.rentalList
+            const userName = res.data.userName
+            userRentals.textContent = `${userName}님의 대여 목록`
+
+            rentalList.forEach((rental) => {
+                rentals.innerHTML +=
+                    `<tr>
+                        <td>${rental.bookName}</td>
+                        <td>${rental.rentalDate}</td>
+                        <td>${rental.returnDate}</td>
+                        <td><button onclick="returnFunc(${rental.id})">반납 처리</button></td>
+                    </tr>`
+            })
+        }
+
+        const returnFunc = async (id) => {
+            if (!confirm('반납 하시겠습니까?')) {
+                return;
+            }
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/return',
+                data: { id },
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('서버오류로 반납 실패')
+            }
+        }
+
+    </script>
+</body>
+
+</html>

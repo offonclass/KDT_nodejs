@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    </head>
+    <body>
+        <h3>파일 업로드 aws</h3>
+        <form>
+            <input type="file" id="files" multiple /><br />
+            <input type="text" id="title" placeholder="제목" /><br />
+            <textarea id="content" placeholder="내용"></textarea>
+            <button type="button" onclick="upload()">업로드</button>
+        </form>
+        <br>
+        <div class="result"></div>
+        <script>
+            const resultBox = document.querySelector('.result')
+            async function upload() {
+                const file = document.querySelector('#files');
+                const title = document.querySelector('#title').value;
+                const content = document.querySelector('#content').value;
+                console.log(file.files);
+                //폼데이터 생성
+                const formData = new FormData();
+                formData.append('title', title);
+                formData.append('content', content);
+                //파일이 여러개이므로 반목문을 사용
+                for (let i = 0; i < file.files.length; i++) {
+                    formData.append('files', file.files[i]);
+                }
+
+                const res = await axios({
+                    method: 'post',
+                    url: '/upload',
+                    data: formData,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                console.log('res', res);
+
+                
+                res.data.response.forEach((value) => {
+                    const img = document.createElement('img')
+                    img.src = value.url;
+                    img.style.width = '200px'
+                    resultBox.append(img)
+                })
+
+                
+            }
+        </script>
+    </body>
+</html>

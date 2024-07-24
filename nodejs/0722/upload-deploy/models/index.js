@@ -7,11 +7,12 @@ const db = {};
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config);
 
-db.User = require('./user')(sequelize)
-db.Profile = require('./profile')(sequelize)
+//모델
+db.Post = require('./post')(sequelize, Sequelize);
+db.Image = require('./image')(sequelize, Sequelize);
 
-db.User.hasOne(db.Profile, {foreignkey: 'userStudyId', onDelete: 'CASCADE'} )
-db.Profile.belongsTo(db.User, {foreignkey: 'userStudyId', onDelete: 'CASCADE'} )
+db.Post.hasMany(db.Image, { foreignKey: 'postId' });
+db.Image.belongsTo(db.Post, { foreignKey: 'postId' });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

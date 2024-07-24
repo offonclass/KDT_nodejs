@@ -17,9 +17,9 @@ const profile = (seq) => {
             type: DataTypes.STRING,
             unique: true
         },
-        userId: {
+        userStudyId: {
             type: DataTypes.INTEGER,
-            reference: {
+            references: {
                 model: 'user_studies',
                 key: 'id'
             },

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <button onclick="hello()">hello</button>
+    <button onclick="study()">study</button>
+    <button onclick="bye()">bye</button>
+    <p id="text"></p>
+    <script>
+        const socket = io();
+        const p = document.querySelector('#text')
+
+        function hello() {
+            socket.emit('hello', {message: 'hello'})
+            socket.on('rtHello', (arg) => {
+                console.log(arg);
+                p.textContent = `hello : ${arg.message}`
+            })
+        }
+
+        function study() {
+            socket.emit('study', {message: 'study'})
+            socket.on('rtStudy', (arg) => {
+                console.log(arg);
+                p.textContent = `study : ${arg.message}`
+            })
+        }
+
+        function bye() {
+            socket.emit('bye', {message: 'bye'})
+            socket.on('rtBye', (arg) => {
+                console.log(arg);
+                p.textContent = `bye : ${arg.message}`
+            })
+        }
+    </script>
+</body>
+</html>

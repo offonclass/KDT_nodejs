@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+    <style>
+        td {
+            text-align: center;
+            padding: 5px 8px;
+        }
+        #X{
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>전체 도서 목록</h3>
+    <table border="1" cellspacing="0">
+        <thead>
+            <tr>
+                <th>책 제목</th>
+                <th>저자</th>
+                <th>출판일</th>
+                <th>재고 여부</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <br>
+    <a href="/admin">돌아가기</a>
+
+
+
+    <script>
+        (async function () {
+            const tbody = document.querySelector('tbody')
+            const res = await axios({
+                method: 'post',
+                url: '/api/library/bookList',
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            if (res.data.result) {
+                const bookList = res.data.bookList;
+                console.log(bookList);
+                bookList.forEach((book) => {
+                    let exist = ''
+                    if(book.exist) {
+                        exist = 'O'
+                    } else {
+                        exist = 'X'
+                    }
+                    tbody.innerHTML +=
+                        `<tr id="${exist}">
+                            <td>${book.bookName}</td>
+                            <td>${book.author}</td>
+                            <td>${book.publishDate}</td>
+                            <td>${exist}</td>
+                            <td><button onclick="deleteFunc(${book.id})">삭제</button></td>
+                        </tr>`
+                })
+
+            } else {
+                alert('관리자 권한 없음')
+                document.location.href = '/'
+            }
+        })()
+
+        const deleteFunc = async (id) => {
+            if (!confirm('정말로 삭제하시겠습니까?')) {
+                return;
+            }
+            console.log('id??', id);
+            const res = await axios({
+                method: 'delete',
+                url: '/api/library/delete',
+                data: { id },
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            console.log('삭제성공?', res.data);
+            if (res.data.result) {
+                document.location.reload();
+            } else {
+                alert('서버오류로 삭제 실패')
+            }
+        }
+
+
+
+    </script>
+</body>
+
+</html>

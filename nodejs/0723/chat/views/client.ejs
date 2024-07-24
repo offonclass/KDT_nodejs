@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+    <style>
+        #chat {
+            max-height: 500px;
+            width: 500px;
+            background-color: beige;
+            overflow: auto;
+
+        }
+
+        .myMsg {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <h3>채팅방</h3>
+    <div id="room">
+        <form id="room-form">
+            <input type="text" id="userName" placeholder="사용자 이름 입력">
+            <input type="text" id="roomName" placeholder="채팅방 이름"><br />
+            <button>생성</button>
+        </form>
+        <ul id="room-list"></ul>
+    </div>
+    <div id="chat" hidden>
+        <div id="message">
+            <div id="notice"></div>
+        </div>
+        <form id="chat-form">
+            <select id="userList">
+                <option value="all">전체</option>
+            </select>
+            <input type="text" id="input-message" placeholder="메세지 입력" />
+            <button>입력</button>
+        </form>
+    </div>
+    <script>
+        const socket = io();
+        const chatContainer = document.querySelector('#chat')
+
+
+        const roomForm = document.querySelector('#room-form')
+        const chatForm = document.querySelector('#chat-form')
+        const notice = document.querySelector('#notice')
+        const message = document.querySelector('#message')
+        const userList = document.querySelector('#userList')
+
+        let myId = '';
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const msg = chatForm.querySelector('#input-message');
+            if (userList.value === 'all') {
+                socket.emit('sendMessage', { id: 'all', message: msg.value })
+            } else {
+                socket.emit('sendMessage', { id: userList.value, message: msg.value })
+            }
+
+            msg.value = '';
+        })
+
+        // 폼이벤트
+        roomForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const roomName = roomForm.querySelector('#roomName').value;
+            const userName = roomForm.querySelector('#userName').value;
+
+            if (roomName === '' || userName === '') {
+                alert('방 이름과 닉네임을 적어주세요')
+                return;
+            }
+
+            socket.emit('create', { roomName, userName })
+            const room = document.querySelector('#room')
+            const chat = document.querySelector('#chat')
+            room.hidden = true;
+            chat.hidden = false;
+        })
+
+
+        // 소켓이벤트
+        socket.on('notice', (arg) => {
+            console.log(arg);
+            const p = document.createElement('p')
+            p.textContent = arg
+            notice.appendChild(p)
+        })
+
+        socket.on('roomList', (arg) => {
+            const roomList = document.querySelector('#room-list')
+            roomList.textContent = '';
+            console.log('roomList', arg);
+            arg.forEach((room) => {
+                const li = document.createElement('li')
+                li.textContent = room;
+                roomList.appendChild(li)
+            })
+        })
+
+        socket.on('newMessage', (arg) => {
+            console.log('수신 메세지 내용', arg);
+            const p = document.createElement('p')
+            p.textContent = `${arg.userName} : ${arg.message}`;
+            if (arg.id === myId) {
+                p.className = 'myMsg'
+            }
+            message.appendChild(p)
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        })
+
+        socket.on('secretMessage', (arg) => {
+            console.log('수신 메세지 내용', arg);
+            const p = document.createElement('p')
+            p.textContent = `${arg.userName} : ${arg.message}`;
+            if (arg.id === myId) {
+                p.className = 'myMsg'
+            }
+            message.appendChild(p)
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        })
+
+        socket.on('userList', (arg) => {
+            console.log('userList!!!', arg);
+            const { roomUserList, roomIdList } = arg;
+            roomUserList.forEach((user) => {
+                const option = document.createElement('option')
+                roomIdList.forEach((id) => {
+                    option.value = id;
+                })
+                option.textContent = user;
+                userList.appendChild(option);
+                console.log(user);
+            })
+        })
+
+        socket.on('myId', (arg) => {
+            console.log(arg);
+            myId = arg;
+        })
+
+
+    </script>
+</body>
+
+</html>

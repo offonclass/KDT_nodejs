@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h3>실습1 Socket 연습</h3><br /><br />
+    <form>
+        <h4>Hello World!</h4>
+        <button type="button" onclick="hello()">hello</button>
+        <button type="button" onclick="study()">study</button>
+        <button type="button" onclick="bye()">bye</button>
+    </form>
+    <div class="resultBox"></div>
+    <script>
+        const socket = io();
+        const resultBox = document.querySelector('.resultBox')
+
+        const hello = () => {
+            socket.emit('hello', 'hello')
+            socket.on('hello', (arg) => {
+                console.log(arg);
+                resultBox.innerHTML = `<p>${arg}</p>`
+            })
+        }
+        const study = () => {
+            socket.emit('study', 'study')
+            socket.on('study', (arg) => {
+                console.log(arg);
+                resultBox.innerHTML = `<p>${arg}</p>`
+            })
+        }
+        const bye = () => {
+            socket.emit('bye', 'bye')
+            socket.on('bye', (arg) => {
+                console.log(arg);
+                resultBox.innerHTML = `<p>${arg}</p>`
+            })
+        }
+
+    </script>
+
+</body>
+
+</html>
