@@ -32,8 +32,8 @@ const upload = multer({
 const arrayFiles = upload.array('files');
 const uploadFunc = async (req, res) => {
     arrayFiles(req, res, async (err) => {
-        console.log(req.body);
-        console.log(req.files);
+        console.log('body!!!!',req.body);
+        console.log('files!!!!',req.files);
         if (err) {
             return res.status(500).json({ result: false });
         }

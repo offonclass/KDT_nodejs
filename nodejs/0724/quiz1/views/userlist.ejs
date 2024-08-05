@@ -69,7 +69,9 @@
         })()
 
         const showRentals = async (id) => {
+            
             const rentals = document.querySelector('#rentals')
+            rentals.innerHTML = '';
             const userRentals = document.querySelector('#userRentals')
             const rentalTable = document.querySelector('#rentalTable')
             rentalTable.removeAttribute('hidden')

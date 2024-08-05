@@ -9,8 +9,14 @@
     <body>
         <h3>파일 업로드 aws</h3>
         <form>
-            <input type="file" id="files" multiple /><br />
-            <input type="text" id="title" placeholder="제목" /><br />
+            <!-- <input type="file" id="file" multiple /><br />
+            <input type="text" id="title" placeholder="제목" /><br /> -->
+            <input type="file" id="file1"  /><br />
+            <input type="text" id="title1" placeholder="제목" /><br />
+            <input type="file" id="file2"  /><br />
+            <input type="text" id="title2" placeholder="제목" /><br />
+            <input type="file" id="file3"  /><br />
+            <input type="text" id="title3" placeholder="제목" /><br />
             <textarea id="content" placeholder="내용"></textarea>
             <button type="button" onclick="upload()">업로드</button>
         </form>
@@ -19,18 +25,23 @@
         <script>
             const resultBox = document.querySelector('.result')
             async function upload() {
-                const file = document.querySelector('#files');
-                const title = document.querySelector('#title').value;
+                const file1 = document.querySelector('#file1');
+                const file2 = document.querySelector('#file2');
+                const file3 = document.querySelector('#file3');
+                const title1 = document.querySelector('#title1').value;
+                const title2 = document.querySelector('#title2').value;
+                const title3 = document.querySelector('#title3').value;
                 const content = document.querySelector('#content').value;
-                console.log(file.files);
+                // console.log(file.files);
                 //폼데이터 생성
                 const formData = new FormData();
-                formData.append('title', title);
+                formData.append('title1', title1);
+                formData.append('title2', title2);
+                formData.append('title3', title3);
                 formData.append('content', content);
-                //파일이 여러개이므로 반목문을 사용
-                for (let i = 0; i < file.files.length; i++) {
-                    formData.append('files', file.files[i]);
-                }
+                formData.append('file1', file1.files[0]);
+                formData.append('file2', file2.files[0]);
+                formData.append('file3', file3.files[0]);
 
                 const res = await axios({
                     method: 'post',
